@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const httpProxy = require('http-proxy');
 const fs = require('fs');
+var Path = require('path');
 
 //initialize the app:
 const app = express();
@@ -20,8 +21,8 @@ app.use((req, res, next) => {
 
 const tLSProxy = httpProxy.createProxyServer({
   ssl: {
-    key: fs.readFileSync('/secondary-disk/certs/nodejs-dummy-server/proxy_generated/server-key'),
-    cert: fs.readFileSync('/secondary-disk/certs/nodejs-dummy-server/proxy_generated/server-certificate'),
+    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
+    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
     checkServerIdentity: () => {
       // This method doesn't remove the signature check, it only skip the check for the host to be the same as in the CN of the
       // cert. Refer to https://stackoverflow.com/q/50541317 for more info.
@@ -47,7 +48,7 @@ app.get('/proxy', function (req, res) {
   req.url = '/';
   tLSProxy.web(req, res, { 
     target: 'https://localhost:9999',
-    ca: fs.readFileSync('/secondary-disk/certs/nodejs-dummy-server/generated/cacert'),
+    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'generated', 'cacert'))),
   });
 });
 

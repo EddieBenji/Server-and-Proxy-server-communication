@@ -2,6 +2,7 @@ const app = require('./app');
 const debug = require('debug')('dummy-server');
 const https = require('https');
 const fs = require('fs');
+var Path = require('path');
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -47,11 +48,10 @@ const onListening = () => {
 
 const port = normalizePort(process.env.PORT || '8888');
 app.set('port', port);
-
 const options = {
-    key: fs.readFileSync('/secondary-disk/certs/nodejs-dummy-server/proxy_generated/server-key'),
-    cert: fs.readFileSync('/secondary-disk/certs/nodejs-dummy-server/proxy_generated/server-certificate'),
-    ca: fs.readFileSync('/secondary-disk/certs/nodejs-dummy-server/proxy_generated/cacert'),
+    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
+    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
+    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'cacert'))),
     passphrase: 'eduardoOther',
     rejectUnauthorized: true
 };

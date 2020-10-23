@@ -10,6 +10,8 @@
 
 
 randomPass='eduardoOther'
+# Change this to nodejs-dummy-server/generated #for the server !!
+# Or nodejs-dummy-server/proxy_generated #for the proxy server !!
 CERTIFICATE_PATH=/secondary-disk/certs/nodejs-dummy-server/proxy_generated/
 
 CA_KEY=${CERTIFICATE_PATH}ca.key
