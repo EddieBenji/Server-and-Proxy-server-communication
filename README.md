@@ -1,6 +1,4 @@
-================================================================
- RUNNING SERVER AND PROXY SERVER TOGETHER
-================================================================
+*RUNNING SERVER AND PROXY SERVER TOGETHER*
 1. SERVER
 - Execute npm run dev in root folder
 - The server should have started
