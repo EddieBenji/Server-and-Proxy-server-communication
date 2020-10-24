@@ -19,24 +19,42 @@ app.use((req, res, next) => {
   next();
 });
 
-const tLSProxy = httpProxy.createProxyServer({
+/*const tLSProxy = httpProxy.createProxyServer({
   ssl: {
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
+    key: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/client-key'),
+    cert: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/client-certificate'),
+    //ca: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/cacert'),
     checkServerIdentity: () => {
       // This method doesn't remove the signature check, it only skip the check for the host to be the same as in the CN of the
       // cert. Refer to https://stackoverflow.com/q/50541317 for more info.
       return undefined;
     }
   },
-  secure: true, // true/false, if you want to verify the SSL Certs OR, when we're not using self-signed certs. // SKIP_TLS... is false, then this should be true.
-  xfwd: true,
-  changeOrigin: true,
-  preserveHeaderKeyCase: true,
-  autoRewrite: true,
   target: {
     https: true
     } 
+});*/
+const tLSProxy = httpProxy.createProxyServer({
+  target: {
+    protocol: 'https:',
+    host: 'server.localhost',
+    port: 9999,
+    passphrase: 'capass',
+    key: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/client-key'),
+    cert: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/client-certificate'),
+    ca: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/cacert')
+    //ca: fs.readFileSync('/home/jpalomo/Documents/Tibco/Linux/Scripts/certs/generated/cacert')
+  },
+  changeOrigin: true,
+});
+
+tLSProxy.on('error', function(err, proxyReq, proxyRes){
+    console.error('Proxy unable to serve request for a path : ' + proxyReq.url);
+    console.error('Proxy error: ', err);
+    
+    tLSProxy.writeHead(500, { 'Content-Type': 'text/plain' });
+    tLSProxy.write('An error happened at server. Please contact your administrator.');
+    tLSProxy.end();
 });
 
 // Dummy route
@@ -46,10 +64,19 @@ app.get('/', function (req, res) {
 app.get('/proxy', function (req, res) {
   console.log('calling the proxy to call the server!');
   req.url = '/';
-  tLSProxy.web(req, res, { 
-    target: 'https://localhost:9999',
-    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'generated', 'cacert'))),
-  });
+  tLSProxy.web(req, res);
+  /*tLSProxy.web(req, res, { 
+    ssl: {
+      key: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/client-key'),
+    cert: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/client-certificate'),
+    ca: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/cacert'),
+    },
+    //target: 'server.localhost',
+    //port: '9999'
+    target: 'https://server.localhost:9999',
+    //ca: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/cacert'),
+    passphrase: 'capass'
+  });*/
 });
 
 module.exports = app;

@@ -50,12 +50,15 @@ const port = normalizePort(process.env.PORT || '9999');
 app.set('port', port);
 
 const options = {
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'server-key'))),
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'server-certificate'))),
-    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'cacert'))),
-    passphrase: 'eduardo',
+    key: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/server-key'),
+    cert: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/server-certificate'),
+    ca: fs.readFileSync('/home/jpalomo/Desktop/mutual/Server-and-Proxy-server-communication/certs/cacert'),
+    passphrase: 'capass',
+    requestCert: true,
     rejectUnauthorized: true
 };
+
+//console.log('CA path', Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'cacert')));
 
 const server = https.createServer(options, app);
 server.on('error', onError);

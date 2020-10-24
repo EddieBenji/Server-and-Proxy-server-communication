@@ -16,6 +16,16 @@ app.use((req, res, next) => {
   next();
 });
 
+
+const clientAuthMiddleware = (req, res, next) => {
+    console.error(req.client.authorized);
+    if (!req.client.authorized) {
+        return res.status(401).send({ msg: 'Invalid client certificate authentication.' });
+    }
+    return next();
+};
+app.use(clientAuthMiddleware);
+
 // Dummy route
 app.get('/', function (req, res) {
     res.send({msg: 'Hello World, Eduardo here on the dummy server!'})
