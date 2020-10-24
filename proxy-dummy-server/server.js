@@ -49,18 +49,10 @@ const onListening = () => {
 const port = normalizePort(process.env.PORT || '8888');
 app.set('port', port);
 const options = {
-  // key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-key.pem'))), // We different files
-  // cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-crt.pem'))),
-  // ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'ca-crt.pem'))),
   key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
   cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
   ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'generated', 'cacert'))),
   passphrase: 'eduardoOther',
-  // checkServerIdentity: () => {
-  //   // This method doesn't remove the signature check, it only skip the check for the host to be the same as in the CN of the
-  //   // cert. Refer to https://stackoverflow.com/q/50541317 for more info.
-  //   return undefined;
-  // },
   rejectUnauthorized: true
 };
 

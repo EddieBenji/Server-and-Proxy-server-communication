@@ -20,38 +20,25 @@ app.use((req, res, next) => {
 });
 
 const tLSProxy = httpProxy.createProxyServer({
-  // ssl: {
-  //   key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
-  //   cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
-  //   ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'generated', 'cacert'))),
-  //   passphrase: 'eduardoOther',
-  //   checkServerIdentity: () => {
-  //     // This method doesn't remove the signature check, it only skip the check for the host to be the same as in the CN of the
-  //     // cert. Refer to https://stackoverflow.com/q/50541317 for more info.
-  //     return undefined;
-  //   }
-  // },
-  target: {
-    https: true,
-    protocol: 'https:',
-    host: 'localhost',
-    port: 9999,
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-key.pem'))), // TLS_CLIENT_KEY_FILE
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-crt.pem'))), // TLS_CLIENT_CERT_FILE
-    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'ca-crt.pem'))), // GRAFANA_TLS_CACERT_FILE
-    //key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
-    //cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
-    // ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'generated', 'cacert'))),
-    // passphrase: 'eduardoOther' // TLS_CLIENT_KEY_PASSWORD
-    // passphrase: 'capass',
-    // key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'certs', 'client-key'))),
-    // cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'certs', 'client-certificate')))
+  ssl: {
+    checkServerIdentity: () => {
+      // This method doesn't remove the signature check, it only skip the check for the host to be the same as in the CN of the
+      // cert. Refer to https://stackoverflow.com/q/50541317 for more info.
+      return undefined;
+    }
   },
   xfwd: true,
   secure: true,
   changeOrigin: true,
   preserveHeaderKeyCase:true,
   autoRewrite: true,
+});
+
+tLSProxy.on('error', (err, proxyReq, proxyRes) => {
+  console.error(err);
+  proxyRes.writeHead(500, { 'Content-Type': 'text/plain' });
+  proxyRes.write('An error happened at server. Please contact your administrator.');
+  proxyRes.end();
 });
 
 // Dummy route
@@ -61,7 +48,18 @@ app.get('/', function (req, res) {
 app.get('/proxy', function (req, res) {
   console.log('calling the proxy to call the server!');
   req.url = '/';
-  tLSProxy.web(req, res);
+  tLSProxy.web(req, res, {
+    target: {
+      https: true,
+      protocol: 'https:',
+      host: 'localhost',
+      port: 9999,
+      key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build', 'querynode-client-key'))), // TLS_CLIENT_KEY_FILE
+      cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build', 'querynode-client-certificate'))), // TLS_CLIENT_CERT_FILE
+      ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build', 'cacert'))), // GRAFANA_TLS_CACERT_FILE
+      passphrase: 'eduardo', // TLS_CLIENT_KEY_PASSWORD
+    },
+  });
 });
 
 module.exports = app;

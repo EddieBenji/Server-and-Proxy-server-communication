@@ -24,10 +24,8 @@ app.get('/', function (req, res) {
     // Examine the cert itself, and even validate based on that!
   var cert = req.socket.getPeerCertificate();
   if (cert.subject) {
-    console.log('Client Certificate Common Name: '+cert.subject.CN);
-    console.log('Client Certificate Location: '+cert.subject.L);
-    console.log('Client Certificate Organization Name: '+cert.subject.O);
-    console.log('Client Certificate Email Address: '+cert.subject.emailAddress);
+    console.log('Subject: ', JSON.stringify(cert.subject, undefined, 2));
+    console.log('Issuer: ',JSON.stringify(cert.issuer, undefined, 2));
   }
   
     res.send({msg: 'Hello World, Eduardo here on the dummy server!'})
