@@ -1,7 +1,7 @@
 // Libraries:
 const express = require('express');
 const bodyParser = require('body-parser');
-const clientAuthMiddleware = require('./clientAuthMiddleware');
+const mutualAuthVerification = require('./mutualAuthVerification');
 
 //initialize the app:
 const app = express();
@@ -17,11 +17,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(clientAuthMiddleware());
+app.use(mutualAuthVerification);
 
 // Dummy route
 app.get('/', function (req, res) {
-  res.send({msg: 'Hello World, Eduardo here on the dummy server!'})
+    // Examine the cert itself, and even validate based on that!
+  var cert = req.socket.getPeerCertificate();
+  if (cert.subject) {
+    console.log('Client Certificate Common Name: '+cert.subject.CN);
+    console.log('Client Certificate Location: '+cert.subject.L);
+    console.log('Client Certificate Organization Name: '+cert.subject.O);
+    console.log('Client Certificate Email Address: '+cert.subject.emailAddress);
+  }
+  
+    res.send({msg: 'Hello World, Eduardo here on the dummy server!'})
 });
 
 
