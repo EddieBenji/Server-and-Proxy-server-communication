@@ -20,23 +20,20 @@ app.use((req, res, next) => {
 });
 
 const tLSProxy = httpProxy.createProxyServer({
-  ssl: {
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
-    checkServerIdentity: () => {
-      // This method doesn't remove the signature check, it only skip the check for the host to be the same as in the CN of the
-      // cert. Refer to https://stackoverflow.com/q/50541317 for more info.
-      return undefined;
-    }
-  },
-  secure: true, // true/false, if you want to verify the SSL Certs OR, when we're not using self-signed certs. // SKIP_TLS... is false, then this should be true.
-  xfwd: true,
-  changeOrigin: true,
-  preserveHeaderKeyCase: true,
-  autoRewrite: true,
   target: {
-    https: true
-    } 
+    protocol: 'https:',
+    host: 'localhost',
+    port: 9999,
+    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-key.pem'))),
+    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-crt.pem'))),
+    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'ca-crt.pem'))),
+  },
+  secure: true,
+  changeOrigin: true,
+  // xfwd: true,
+  // changeOrigin: true,
+  // preserveHeaderKeyCase: true,
+  // autoRewrite: true
 });
 
 // Dummy route
@@ -46,10 +43,7 @@ app.get('/', function (req, res) {
 app.get('/proxy', function (req, res) {
   console.log('calling the proxy to call the server!');
   req.url = '/';
-  tLSProxy.web(req, res, { 
-    target: 'https://localhost:9999',
-    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'generated', 'cacert'))),
-  });
+  tLSProxy.web(req, res);
 });
 
 module.exports = app;

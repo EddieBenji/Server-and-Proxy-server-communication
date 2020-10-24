@@ -49,10 +49,10 @@ const onListening = () => {
 const port = normalizePort(process.env.PORT || '8888');
 app.set('port', port);
 const options = {
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-key'))),
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'server-certificate'))),
-    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'proxy_generated', 'cacert'))),
-    passphrase: 'eduardoOther',
+    key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-key.pem'))),
+    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'client1-crt.pem'))),
+    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'Mutual', 'ca-crt.pem'))),
+    //passphrase: 'eduardoOther',
     rejectUnauthorized: true
 };
 
