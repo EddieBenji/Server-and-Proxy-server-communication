@@ -50,11 +50,15 @@ const port = normalizePort(process.env.PORT || '9999');
 app.set('port', port);
 
 const options = {
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'server-key'))),
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'server-certificate'))),
-    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'cacert'))),
-    passphrase: 'eduardo',
-    rejectUnauthorized: true
+    // key: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'server-key'))),
+    // cert: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'server-certificate'))),
+    // ca: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server', 'generated', 'cacert'))),
+    // passphrase: 'eduardo',
+    key: fs.readFileSync(Path.normalize(Path.join(__dirname, 'Mutual', 'server-key.pem'))),
+    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, 'Mutual', 'server-crt.pem'))),
+    ca: fs.readFileSync(Path.normalize(Path.join(__dirname, 'Mutual', 'ca-crt.pem'))),
+    rejectUnauthorized: false, // or true?
+    requestCert: true
 };
 
 const server = https.createServer(options, app);
