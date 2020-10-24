@@ -16,13 +16,17 @@ app.use((req, res, next) => {
   next();
 });
 
+const mutualAuthVerification = (req, res, next) => {
+  // Configure Express to require clients to authenticate with a certificate issued by your CA
+  if (!req.client.authorized) {
+    return res.status(401).send('Invalid client certificate authentication.');
+  }
+  next();
+};
+app.use(mutualAuthVerification);
+
 // Dummy route
 app.get('/', function (req, res) {
-    // Configure Express to require clients to authenticate with a certificate issued by your CA
-    if (!req.client.authorized) {
-      return res.status(401).send('Invalid client certificate authentication.');
-    }
-
     // Examine the cert itself, and even validate based on that!
   var cert = req.socket.getPeerCertificate();
   if (cert.subject) {
