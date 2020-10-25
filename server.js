@@ -50,9 +50,9 @@ const port = normalizePort(process.env.PORT || '9999');
 app.set('port', port);
 
 const options = {
-    passphrase: 'eduardo',
-    key: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server','redtail-build', 'grafana-client-key'))),
-    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server','redtail-build', 'grafana-client-certificate'))),
+    passphrase: 'changeit',
+    key: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server','redtail-build', 'querynode-client-key'))),
+    cert: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server','redtail-build', 'querynode-client-certificate'))),
     ca: fs.readFileSync(Path.normalize(Path.join(__dirname, 'nodejs-dummy-server','redtail-build', 'cacert'))),
     rejectUnauthorized: false, // or true?
     requestCert: true

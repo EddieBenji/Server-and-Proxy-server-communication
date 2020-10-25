@@ -9,10 +9,10 @@
 #
 
 
-randomPass='eduardoOther'
+randomPass=''
 # Change this to nodejs-dummy-server/generated #for the server !!
 # Or nodejs-dummy-server/proxy_generated #for the proxy server !!
-CERTIFICATE_PATH=/secondary-disk/certs/nodejs-dummy-server/proxy_generated/
+CERTIFICATE_PATH=/secondary-disk/Code/dummyServer/certs/
 
 CA_KEY=${CERTIFICATE_PATH}ca.key
 CA_CERT=${CERTIFICATE_PATH}cacert
