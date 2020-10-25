@@ -54,10 +54,10 @@ app.get('/proxy', function (req, res) {
       protocol: 'https:',
       host: 'localhost',
       port: 9999,
-      key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build', 'webapp-client-key'))), // TLS_CLIENT_KEY_FILE
-      cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build', 'webapp-client-certificate'))), // TLS_CLIENT_CERT_FILE
-      ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build', 'cacert'))), // GRAFANA_TLS_CACERT_FILE
-      passphrase: 'changeit', // TLS_CLIENT_KEY_PASSWORD
+      key: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build','withoutpassword', 'webapp-client-key'))), // TLS_CLIENT_KEY_FILE
+      cert: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build','withoutpassword', 'webapp-client-certificate'))), // TLS_CLIENT_CERT_FILE
+      ca: fs.readFileSync(Path.normalize(Path.join(__dirname, '..', 'nodejs-dummy-server', 'redtail-build','withoutpassword', 'cacert'))), // GRAFANA_TLS_CACERT_FILE
+      // passphrase: undefined, // TLS_CLIENT_KEY_PASSWORD
     },
   });
 });
